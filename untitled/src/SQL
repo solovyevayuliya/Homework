@@ -1,0 +1,60 @@
+1. Animal. Вывести все из таблицы Animal:
+SELECT *
+FROM animal;
+
+2. Animal. Вывести записи из таблицы Animal только мужского пола (sex = 1):
+SELECT *
+FROM animal
+WHERE sex = 1;
+
+3. Animal. Вывести все записи из таблицы Animal которые имеют тип 1 и 2:
+SELECT *
+FROM animal
+WHERE animal.type = 1 OR animal.type = 2;
+
+4. Anymal. Types. Zoo_Animal. Вывести имена всех животных и названия их типов:
+SELECT animal.name AS animal_name, types.name AS type
+FROM animal
+JOIN types ON animal.type = types.id;
+
+5. Animal. Workman. Вывести имена всех животных и имена их рабочих:
+SELECT animal.name AS animal_name, workman.name AS workman_name
+FROM workman
+JOIN zoo_animal ON workman.id = zoo_animal.workman
+JOIN animal ON animal.id = zoo_animal.zoo_id;
+
+6. Zoo. Zoo_Animal. Workman. Вывести названия зоопарков в которых есть рабочие меньше 50 лет, названия должны быть выведены только уникальные:
+SELECT DISTINCT zoo.name
+FROM zoo
+JOIN zoo_animal ON zoo.id = zoo_animal.zoo_id
+JOIN workman ON zoo_animal.workman = workman.id
+WHERE workman.age < 50;
+
+7. Animal. Zoo. Zoo_Animal. Вывести название зоопарков и сумму лет находящихся в них животных:
+SELECT zoo.name, SUM (animal.age)
+FROM zoo
+JOIN zoo_animal ON zoo_animal.zoo_id = zoo.id
+JOIN animal ON animal.id = zoo_animal.animal_id
+GROUP BY zoo.name;
+
+8. Zoo. Zoo_Animal. Вывести зоопарк в котором нет ни одного животного.
+SELECT zoo.name
+FROM zoo_animal
+JOIN zoo ON zoo_animal.zoo_id = zoo.id
+GROUP BY zoo.name
+HAVING COUNT(*) = 0
+
+9. Animal. Places. Вывести имена животных и названия их загонов, отсортировав номера загонов по убыванию:
+SELECT animal.name AS animal_name, places.name AS places_name
+FROM animal
+JOIN places ON animal.place = places.id
+ORDER BY places.place_num DESC;
+
+10. Zoo_Animal. Workman. Positions. Вывести Название зоопарка, имя работника, название должности и его зарплату. Отсортировать по уровню зарплат и вывести топ-3 строки с самыми высокими:
+SELECT zoo.name AS zoo_name, workman.name AS workman_name, positions.name AS positions_name, positions.salary AS positions_salary
+FROM zoo
+JOIN zoo_animal ON zoo_animal.zoo_id = zoo.id
+JOIN workman ON zoo_animal.workman = workman.id
+JOIN positions ON positions.id = workman.position
+ORDER BY positions.salary DESC
+LIMIT (3);
